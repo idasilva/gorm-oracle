@@ -1,0 +1,20 @@
+package tests_test
+
+import (
+	"errors"
+	"testing"
+
+	"github.com/leocomelli/gorm"
+)
+
+func TestErrorsCanBeUsedOutsideGorm(t *testing.T) {
+	errs := []error{errors.New("First"), errors.New("Second")}
+
+	gErrs := gorm.Errors(errs)
+	gErrs = gErrs.Add(errors.New("Third"))
+	gErrs = gErrs.Add(gErrs)
+
+	if gErrs.Error() != "First; Second; Third" {
+		t.Fatalf("Gave wrong error, got %s", gErrs.Error())
+	}
+}
