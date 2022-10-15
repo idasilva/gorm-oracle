@@ -4,26 +4,26 @@ import (
 
 "errors"
 "fmt"
-"github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "github.com/idasilva/gorm-oracle/utils"
 "strings"
 )
 
 // Define callbacks for updating
 func init() {
-	gorm_oracle.DefaultCallback.Update().Register("gorm:assign_updating_attributes", assignUpdatingAttributesCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:begin_transaction", beginTransactionCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:before_update", beforeUpdateCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:save_before_associations", saveBeforeAssociationsCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:update", updateCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:after_update", afterUpdateCallback)
-	gorm_oracle.DefaultCallback.Update().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
+	gorm.DefaultCallback.Update().Register("gorm:assign_updating_attributes", assignUpdatingAttributesCallback)
+	gorm.DefaultCallback.Update().Register("gorm:begin_transaction", beginTransactionCallback)
+	gorm.DefaultCallback.Update().Register("gorm:before_update", beforeUpdateCallback)
+	gorm.DefaultCallback.Update().Register("gorm:save_before_associations", saveBeforeAssociationsCallback)
+	gorm.DefaultCallback.Update().Register("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
+	gorm.DefaultCallback.Update().Register("gorm:update", updateCallback)
+	gorm.DefaultCallback.Update().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
+	gorm.DefaultCallback.Update().Register("gorm:after_update", afterUpdateCallback)
+	gorm.DefaultCallback.Update().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
 }
 
 // assignUpdatingAttributesCallback assign updating attributes to model
-func assignUpdatingAttributesCallback(scope *gorm_oracle.Scope) {
+func assignUpdatingAttributesCallback(scope *gorm.Scope) {
 	if attrs, ok := scope.InstanceGet("gorm:update_interface"); ok {
 		if updateMaps, hasUpdate := scope.UpdatedAttrsWithValues(attrs); hasUpdate {
 			scope.InstanceSet("gorm:update_attrs", updateMaps)
@@ -34,7 +34,7 @@ func assignUpdatingAttributesCallback(scope *gorm_oracle.Scope) {
 }
 
 // beforeUpdateCallback will invoke `BeforeSave`, `BeforeUpdate` method before updating
-func beforeUpdateCallback(scope *gorm_oracle.Scope) {
+func beforeUpdateCallback(scope *gorm.Scope) {
 	if scope.DB().HasBlockGlobalUpdate() && !scope.HasConditions() {
 		scope.Err(errors.New("Missing WHERE clause while updating"))
 		return
@@ -50,14 +50,14 @@ func beforeUpdateCallback(scope *gorm_oracle.Scope) {
 }
 
 // updateTimeStampForUpdateCallback will set `UpdatedAt` when updating
-func updateTimeStampForUpdateCallback(scope *gorm_oracle.Scope) {
+func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); !ok {
 		scope.SetColumn("UpdatedAt", utils.NowFunc())
 	}
 }
 
 // updateCallback the callback used to update data to database
-func updateCallback(scope *gorm_oracle.Scope) {
+func updateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		var sqls []string
 
@@ -100,7 +100,7 @@ func updateCallback(scope *gorm_oracle.Scope) {
 }
 
 // afterUpdateCallback will invoke `AfterUpdate`, `AfterSave` method after updating
-func afterUpdateCallback(scope *gorm_oracle.Scope) {
+func afterUpdateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); !ok {
 		if !scope.HasError() {
 			scope.CallMethod("AfterUpdate")

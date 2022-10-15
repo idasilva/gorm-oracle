@@ -3,7 +3,7 @@ package oracle
 import (
 	"context"
 	"fmt"
-	"github.com/idasilva/gorm-oracle"
+	gorm	"github.com/idasilva/gorm-oracle"
 "reflect"
 	"strconv"
 	"strings"
@@ -17,7 +17,7 @@ type SequenceStore struct {
 
 var sequenceStoreExists bool
 
-func buildFakeSequenceGenerator(sequenceName string, scope *gorm_oracle.Scope) (float64, bool) {
+func buildFakeSequenceGenerator(sequenceName string, scope *gorm.Scope) (float64, bool) {
 
 	if sequenceName != "AUTO_INCREMENT" {
 		return 0, false
@@ -46,7 +46,7 @@ func buildFakeSequenceGenerator(sequenceName string, scope *gorm_oracle.Scope) (
 	return nextVal, true
 }
 
-func setIdentityInsert(scope *gorm_oracle.Scope) {
+func setIdentityInsert(scope *gorm.Scope) {
 
 	if scope.Dialect().GetName() == "goracle" {
 		for _, field := range scope.PrimaryFields() {
@@ -67,13 +67,13 @@ func setIdentityInsert(scope *gorm_oracle.Scope) {
 }
 
 type oracle struct {
-	db gorm_oracle.SQLCommon
+	db gorm.SQLCommon
 	DefaultForeignKeyNamer
 	context context.Context
 }
 
 func init() {
-	gorm_oracle.DefaultCallback.Create().After("gorm:begin_transaction").Register("oracle:set_identity_insert", setIdentityInsert)
+	gorm.DefaultCallback.Create().After("gorm:begin_transaction").Register("oracle:set_identity_insert", setIdentityInsert)
 	RegisterDialect("goracle", &oracle{})
 }
 
@@ -81,7 +81,7 @@ func (oracle) GetName() string {
 	return "goracle"
 }
 
-func (d *oracle) SetDB(db gorm_oracle.SQLCommon) {
+func (d *oracle) SetDB(db gorm.SQLCommon) {
 	d.db = db
 }
 
@@ -93,7 +93,7 @@ func (oracle) Quote(key string) string {
 	return fmt.Sprintf("%s", strings.ToUpper(key))
 }
 
-func (d *oracle) DataTypeOf(field *gorm_oracle.StructField) string {
+func (d *oracle) DataTypeOf(field *gorm.StructField) string {
 	var dataValue, sqlType, size, additionalType = ParseFieldStructForDialect(field, d)
 
 	if sqlType == "" {

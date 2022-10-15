@@ -3,19 +3,19 @@ package oracle
 import (
 	"database/sql"
 	"fmt"
-	"github.com/idasilva/gorm-oracle"
-"reflect"
+	gorm "github.com/idasilva/gorm-oracle"
+	"reflect"
 	"strconv"
 	"strings"
 )
 
 
 
-var dialectsMap = map[string]gorm_oracle.Dialect{}
+var dialectsMap = map[string]gorm.Dialect{}
 
-func NewDialect(name string) gorm_oracle.Dialect {
+func NewDialect(name string) gorm.Dialect {
 	if value, ok := dialectsMap[name]; ok {
-		dialect := reflect.New(reflect.TypeOf(value).Elem()).Interface().(gorm_oracle.Dialect)
+		dialect := reflect.New(reflect.TypeOf(value).Elem()).Interface().(gorm.Dialect)
 		return dialect
 	}
 
@@ -25,12 +25,12 @@ func NewDialect(name string) gorm_oracle.Dialect {
 }
 
 // RegisterDialect register new dialect
-func RegisterDialect(name string, dialect gorm_oracle.Dialect) {
+func RegisterDialect(name string, dialect gorm.Dialect) {
 	dialectsMap[name] = dialect
 }
 
 // ParseFieldStructForDialect get field's sql data type
-var ParseFieldStructForDialect = func(field *gorm_oracle.StructField, dialect gorm_oracle.Dialect) (fieldValue reflect.Value, sqlType string, size int, additionalType string) {
+var ParseFieldStructForDialect = func(field *gorm.StructField, dialect gorm.Dialect) (fieldValue reflect.Value, sqlType string, size int, additionalType string) {
 	// Get redirected field type
 	var (
 		reflectType = field.Struct.Type
@@ -45,7 +45,7 @@ var ParseFieldStructForDialect = func(field *gorm_oracle.StructField, dialect go
 	fieldValue = reflect.Indirect(reflect.New(reflectType))
 
 	if gormDataType, ok := fieldValue.Interface().(interface {
-		GormDataType(gorm_oracle.Dialect) string
+		GormDataType(gorm.Dialect) string
 	}); ok {
 		dataType = gormDataType.GormDataType(dialect)
 	}

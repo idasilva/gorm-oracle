@@ -5,20 +5,20 @@ import (
 "context"
 "errors"
 "fmt"
-"github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "github.com/idasilva/gorm-oracle/utils"
 "reflect"
 )
 
 // Define callbacks for querying
 func init() {
-	gorm_oracle.DefaultCallback.Query().Register("gorm:query", queryCallback)
-	gorm_oracle.DefaultCallback.Query().Register("gorm:preload", gorm_oracle.PreloadCallback)
-	gorm_oracle.DefaultCallback.Query().Register("gorm:after_query", afterQueryCallback)
+	gorm.DefaultCallback.Query().Register("gorm:query", queryCallback)
+	gorm.DefaultCallback.Query().Register("gorm:preload", gorm.PreloadCallback)
+	gorm.DefaultCallback.Query().Register("gorm:after_query", afterQueryCallback)
 }
 
 // queryCallback used to query data from database
-func queryCallback(scope *gorm_oracle.Scope) {
+func queryCallback(scope *gorm.Scope) {
 	if scope.Context == nil{
 		scope.Context = context.Background()
 	}
@@ -88,14 +88,14 @@ func queryCallback(scope *gorm_oracle.Scope) {
 			if err := rows.Err(); err != nil {
 				scope.Err(err)
 			} else if scope.DB().RowsAffected == 0 && !isSlice {
-				scope.Err(gorm_oracle.ErrRecordNotFound)
+				scope.Err(gorm.ErrRecordNotFound)
 			}
 		}
 	}
 }
 
 // afterQueryCallback will invoke `AfterFind` method after querying
-func afterQueryCallback(scope *gorm_oracle.Scope) {
+func afterQueryCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		scope.CallMethod("AfterFind")
 	}

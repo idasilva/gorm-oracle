@@ -3,7 +3,7 @@ package oracle
 import (
 	"context"
 	"fmt"
-	"github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "reflect"
 	"regexp"
 	"strconv"
@@ -16,7 +16,7 @@ type DefaultForeignKeyNamer struct {
 }
 
 type commonDialect struct {
-	db gorm_oracle.SQLCommon
+	db gorm.SQLCommon
 	DefaultForeignKeyNamer
 	context context.Context
 }
@@ -29,7 +29,7 @@ func (commonDialect) GetName() string {
 	return "common"
 }
 
-func (s *commonDialect) SetDB(db gorm_oracle.SQLCommon) {
+func (s *commonDialect) SetDB(db gorm.SQLCommon) {
 	s.db = db
 }
 
@@ -41,7 +41,7 @@ func (commonDialect) Quote(key string) string {
 	return fmt.Sprintf(`"%s"`, key)
 }
 
-func (s *commonDialect) DataTypeOf(field *gorm_oracle.StructField) string {
+func (s *commonDialect) DataTypeOf(field *gorm.StructField) string {
 	var dataValue, sqlType, size, additionalType = ParseFieldStructForDialect(field, s)
 
 	if sqlType == "" {

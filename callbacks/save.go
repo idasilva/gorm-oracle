@@ -1,19 +1,19 @@
 package callbacks
 
 import (
-	"github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "reflect"
 )
 
-func beginTransactionCallback(scope *gorm_oracle.Scope) {
+func beginTransactionCallback(scope *gorm.Scope) {
 	scope.Begin()
 }
 
-func commitOrRollbackTransactionCallback(scope *gorm_oracle.Scope) {
+func commitOrRollbackTransactionCallback(scope *gorm.Scope) {
 	scope.CommitOrRollback()
 }
 
-func saveFieldAsAssociation(scope *gorm_oracle.Scope, field *gorm_oracle.Field) (bool, *gorm_oracle.Relationship) {
+func saveFieldAsAssociation(scope *gorm.Scope, field *gorm.Field) (bool, *gorm.Relationship) {
 	if scope.ChangeableField(field) && !field.IsBlank && !field.IsIgnored {
 		if value, ok := field.TagSettings["SAVE_ASSOCIATIONS"]; !ok || (value != "false" && value != "skip") {
 			if relationship := field.Relationship; relationship != nil {
@@ -24,7 +24,7 @@ func saveFieldAsAssociation(scope *gorm_oracle.Scope, field *gorm_oracle.Field) 
 	return false, nil
 }
 
-func saveBeforeAssociationsCallback(scope *gorm_oracle.Scope) {
+func saveBeforeAssociationsCallback(scope *gorm.Scope) {
 	if !scope.ShouldSaveAssociations() {
 		return
 	}
@@ -45,7 +45,7 @@ func saveBeforeAssociationsCallback(scope *gorm_oracle.Scope) {
 	}
 }
 
-func saveAfterAssociationsCallback(scope *gorm_oracle.Scope) {
+func saveAfterAssociationsCallback(scope *gorm.Scope) {
 	if !scope.ShouldSaveAssociations() {
 		return
 	}

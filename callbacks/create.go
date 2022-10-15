@@ -3,26 +3,26 @@ package callbacks
 import (
 
 "fmt"
-"github.com/idasilva/gorm-oracle"
+gorm "github.com/idasilva/gorm-oracle"
 "github.com/idasilva/gorm-oracle/utils"
 "strings"
 )
 
 // Define callbacks for creating
 func init() {
-	gorm_oracle.DefaultCallback.Create().Register("gorm:begin_transaction", beginTransactionCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:before_create", beforeCreateCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:save_before_associations", saveBeforeAssociationsCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:update_time_stamp", updateTimeStampForCreateCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:create", createCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:force_reload_after_create", forceReloadAfterCreateCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:after_create", afterCreateCallback)
-	gorm_oracle.DefaultCallback.Create().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
+	gorm.DefaultCallback.Create().Register("gorm:begin_transaction", beginTransactionCallback)
+	gorm.DefaultCallback.Create().Register("gorm:before_create", beforeCreateCallback)
+	gorm.DefaultCallback.Create().Register("gorm:save_before_associations", saveBeforeAssociationsCallback)
+	gorm.DefaultCallback.Create().Register("gorm:update_time_stamp", updateTimeStampForCreateCallback)
+	gorm.DefaultCallback.Create().Register("gorm:create", createCallback)
+	gorm.DefaultCallback.Create().Register("gorm:force_reload_after_create", forceReloadAfterCreateCallback)
+	gorm.DefaultCallback.Create().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
+	gorm.DefaultCallback.Create().Register("gorm:after_create", afterCreateCallback)
+	gorm.DefaultCallback.Create().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
 }
 
 // beforeCreateCallback will invoke `BeforeSave`, `BeforeCreate` method before creating
-func beforeCreateCallback(scope *gorm_oracle.Scope) {
+func beforeCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		scope.CallMethod("BeforeSave")
 	}
@@ -32,7 +32,7 @@ func beforeCreateCallback(scope *gorm_oracle.Scope) {
 }
 
 // updateTimeStampForCreateCallback will set `CreatedAt`, `UpdatedAt` when creating
-func updateTimeStampForCreateCallback(scope *gorm_oracle.Scope) {
+func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		now := utils.NowFunc()
 
@@ -51,7 +51,7 @@ func updateTimeStampForCreateCallback(scope *gorm_oracle.Scope) {
 }
 
 // createCallback the callback used to insert data into database
-func createCallback(scope *gorm_oracle.Scope) {
+func createCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		defer scope.Trace(utils.NowFunc())
 
@@ -136,14 +136,14 @@ func createCallback(scope *gorm_oracle.Scope) {
 					scope.DB().RowsAffected = 1
 				}
 			} else {
-				scope.Err(gorm_oracle.ErrUnaddressable)
+				scope.Err(gorm.ErrUnaddressable)
 			}
 		}
 	}
 }
 
 // forceReloadAfterCreateCallback will reload columns that having default value, and set it back to current object
-func forceReloadAfterCreateCallback(scope *gorm_oracle.Scope) {
+func forceReloadAfterCreateCallback(scope *gorm.Scope) {
 	if blankColumnsWithDefaultValue, ok := scope.InstanceGet("gorm:blank_columns_with_default_value"); ok {
 		db := scope.DB().New().Table(scope.TableName()).Select(blankColumnsWithDefaultValue.([]string))
 		for _, field := range scope.Fields() {
@@ -156,7 +156,7 @@ func forceReloadAfterCreateCallback(scope *gorm_oracle.Scope) {
 }
 
 // afterCreateCallback will invoke `AfterCreate`, `AfterSave` method after creating
-func afterCreateCallback(scope *gorm_oracle.Scope) {
+func afterCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		scope.CallMethod("AfterCreate")
 	}
