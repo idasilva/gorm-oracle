@@ -6,13 +6,11 @@ import (
 	"database/sql/driver"
 	"fmt"
 	gorm "github.com/idasilva/gorm-oracle"
-	"github.com/idasilva/gorm-oracle/dialects/sqlite"
+	"github.com/idasilva/gorm-oracle/dialects"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
-
-
 )
 
 var (
@@ -22,7 +20,10 @@ var (
 func init() {
 	var err error
 
-	if DB, err = OpenTestConnection(); err != nil {
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Minute*10)
+	defer cancel()
+
+	if DB, err = OpenTestConnection(ctxTimeout); err != nil {
 		panic(fmt.Sprintf("No error should happen when connecting to test database, but got err=%+v", err))
 	}
 
@@ -30,11 +31,9 @@ func init() {
 }
 
 
-func OpenTestConnection() (db *gorm.DB, err error) {
+func OpenTestConnection(ctx context.Context) (db *gorm.DB, err error) {
 	fmt.Println("testing sqlite3...")
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*3)
-	defer cancel()
-	db, err = gorm.Open(ctxTimeout, sqlite.NewDialect(), filepath.Join(os.TempDir(), "gorm.db"))
+	db, err = gorm.Open(ctx, dialects.NewDialect("sqlite3"), filepath.Join(os.TempDir(), "gorm.db"))
 
 	db.DB().SetMaxIdleConns(10)
 

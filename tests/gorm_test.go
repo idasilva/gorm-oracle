@@ -1,20 +1,19 @@
 package tests_test
 
 import (
-
-"context"
-"database/sql"
-"database/sql/driver"
-"fmt"
+	"context"
+	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"github.com/erikstmartin/go-testdb"
 	"github.com/idasilva/gorm-oracle"
+	"github.com/idasilva/gorm-oracle/dialects"
 	"os"
-"reflect"
-"strconv"
-"testing"
-"time"
+	"reflect"
+	"strconv"
+	"testing"
+	"time"
 
-	"github.com/idasilva/gorm-oracle/dialects/oracle"
 	_ "github.com/idasilva/gorm-oracle/dialects/mysql"
 	"github.com/idasilva/gorm-oracle/dialects/postgres"
 	_ "github.com/idasilva/gorm-oracle/dialects/sqlite"
@@ -716,7 +715,7 @@ func TestSetAndGet(t *testing.T) {
 }
 
 func TestCompatibilityMode(t *testing.T) {
-	DB, _ := gorm.Open(context.Background(), oracle.NewDialect("testdb"), DB.DB())
+	DB, _ := gorm.Open(context.Background(), dialects.NewDialect("testdb"), DB.DB())
 
 	testdb.SetQueryFunc(func(query string) (driver.Rows, error) {
 		columns := []string{"id", "name", "age"}
@@ -738,7 +737,7 @@ func TestCompatibilityMode(t *testing.T) {
 func TestOpenExistingDB(t *testing.T) {
 	DB.Save(&User{Name: "jnfeinstein"})
 	dialect := os.Getenv("GORM_DIALECT")
-	db, err := gorm.Open(context.Background(), oracle.NewDialect(dialect), DB.DB())
+	db, err := gorm.Open(context.Background(), dialects.NewDialect(dialect), DB.DB())
 	if err != nil {
 		t.Errorf("Should have wrapped the existing DB connection")
 	}
@@ -757,7 +756,7 @@ func TestDdlErrors(t *testing.T) {
 	}
 	defer func() {
 		// Reopen DB connection.
-		if DB, err = OpenTestConnection(); err != nil {
+		if DB, err = OpenTestConnection(context.Background()); err != nil {
 			t.Fatalf("Failed re-opening db connection: %s", err)
 		}
 	}()
@@ -770,7 +769,7 @@ func TestDdlErrors(t *testing.T) {
 func TestOpenWithOneParameter(t *testing.T) {
 	var dbSQL gorm.SQLCommon
 
-	db, err := gorm.Open(context.Background(), oracle.NewDialect( "oracle"), dbSQL)
+	db, err := gorm.Open(context.Background(), dialects.NewDialect( "oracle"), dbSQL)
 	if db != nil {
 		t.Error("Open with one parameter returned non nil for db")
 	}

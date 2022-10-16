@@ -1,10 +1,10 @@
-package oracle
+package dialects
 
 import (
 	"context"
 	"fmt"
 	gorm "github.com/idasilva/gorm-oracle"
-"reflect"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -164,4 +164,8 @@ func IsByteArrayOrSlice(value reflect.Value) bool {
 
 func (c commonDialect) SetContext(context context.Context){
 	c.context = context
+}
+
+func NewCommonDialect()*commonDialect {
+	return &commonDialect{}
 }

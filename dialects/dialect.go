@@ -1,4 +1,4 @@
-package oracle
+package dialects
 
 import (
 	"database/sql"
@@ -20,7 +20,7 @@ func NewDialect(name string) gorm.Dialect {
 	}
 
 	fmt.Printf("`%v` is not officially supported, running under compatibility mode.\n", name)
-	commontDialect := &commonDialect{}
+	commontDialect := NewCommonDialect()
 	return commontDialect
 }
 

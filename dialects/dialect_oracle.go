@@ -1,10 +1,10 @@
-package oracle
+package dialects
 
 import (
 	"context"
 	"fmt"
-	gorm	"github.com/idasilva/gorm-oracle"
-"reflect"
+	gorm "github.com/idasilva/gorm-oracle"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
