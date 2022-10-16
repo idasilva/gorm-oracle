@@ -1,11 +1,10 @@
 package callbacks
 
 import (
-
-"fmt"
-gorm "github.com/idasilva/gorm-oracle"
-"github.com/idasilva/gorm-oracle/utils"
-"strings"
+	"fmt"
+	gorm "github.com/idasilva/gorm-oracle"
+	"github.com/idasilva/gorm-oracle/utils"
+	"strings"
 )
 
 // Define callbacks for creating
@@ -19,7 +18,6 @@ func init() {
 	gorm.DefaultCallback.Create().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
 	gorm.DefaultCallback.Create().Register("gorm:after_create", afterCreateCallback)
 	gorm.DefaultCallback.Create().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
-	fmt.Println("created")
 }
 
 // beforeCreateCallback will invoke `BeforeSave`, `BeforeCreate` method before creating
@@ -119,7 +117,7 @@ func createCallback(scope *gorm.Scope) {
 
 		// execute create sql
 		if lastInsertIDReturningSuffix == "" || primaryField == nil {
-			if result, err := scope.SQLDB().ExecContext(scope.DB().Context,scope.SQL, scope.SQLVars...); scope.Err(err) == nil {
+			if result, err := scope.SQLDB().ExecContext(scope.DB().Context, scope.SQL, scope.SQLVars...); scope.Err(err) == nil {
 				// set rows affected count
 				scope.DB().RowsAffected, _ = result.RowsAffected()
 
@@ -132,7 +130,7 @@ func createCallback(scope *gorm.Scope) {
 			}
 		} else {
 			if primaryField.Field.CanAddr() {
-				if err := scope.SQLDB().QueryRowContext(scope.DB().Context,scope.SQL, scope.SQLVars...).Scan(primaryField.Field.Addr().Interface()); scope.Err(err) == nil {
+				if err := scope.SQLDB().QueryRowContext(scope.DB().Context, scope.SQL, scope.SQLVars...).Scan(primaryField.Field.Addr().Interface()); scope.Err(err) == nil {
 					primaryField.IsBlank = false
 					scope.DB().RowsAffected = 1
 				}

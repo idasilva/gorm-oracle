@@ -14,14 +14,13 @@ import (
 )
 
 var (
-	DB                 *gorm.DB
+	DB *gorm.DB
 )
 
 func init() {
 	var err error
 
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Minute*10)
-	defer cancel()
+	ctxTimeout, _ := context.WithTimeout(context.Background(), time.Minute*10)
 
 	if DB, err = OpenTestConnection(ctxTimeout); err != nil {
 		panic(fmt.Sprintf("No error should happen when connecting to test database, but got err=%+v", err))
@@ -29,7 +28,6 @@ func init() {
 
 	runMigration()
 }
-
 
 func OpenTestConnection(ctx context.Context) (db *gorm.DB, err error) {
 	fmt.Println("testing sqlite3...")
@@ -39,7 +37,6 @@ func OpenTestConnection(ctx context.Context) (db *gorm.DB, err error) {
 
 	return
 }
-
 
 type User struct {
 	Id                int64 `gorm:"AUTO_INCREMENT"`

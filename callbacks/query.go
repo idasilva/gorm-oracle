@@ -1,13 +1,12 @@
 package callbacks
 
 import (
-
-"context"
-"errors"
-"fmt"
+	"context"
+	"errors"
+	"fmt"
 	gorm "github.com/idasilva/gorm-oracle"
-"github.com/idasilva/gorm-oracle/utils"
-"reflect"
+	"github.com/idasilva/gorm-oracle/utils"
+	"reflect"
 )
 
 // Define callbacks for querying
@@ -15,12 +14,11 @@ func init() {
 	gorm.DefaultCallback.Query().Register("gorm:query", queryCallback)
 	gorm.DefaultCallback.Query().Register("gorm:preload", gorm.PreloadCallback)
 	gorm.DefaultCallback.Query().Register("gorm:after_query", afterQueryCallback)
-	fmt.Println("query")
 }
 
 // queryCallback used to query data from database
 func queryCallback(scope *gorm.Scope) {
-	if scope.Context == nil{
+	if scope.Context == nil {
 		scope.Context = context.Background()
 	}
 	defer scope.Trace(utils.NowFunc())
@@ -63,7 +61,7 @@ func queryCallback(scope *gorm.Scope) {
 			scope.SQL += utils.AddExtraSpaceIfExist(fmt.Sprint(str))
 		}
 
-		if rows, err := scope.SQLDB().QueryContext(scope.Context,scope.SQL, scope.SQLVars...); scope.Err(err) == nil {
+		if rows, err := scope.SQLDB().QueryContext(scope.Context, scope.SQL, scope.SQLVars...); scope.Err(err) == nil {
 			defer rows.Close()
 
 			columns, _ := rows.Columns()

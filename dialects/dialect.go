@@ -4,12 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	gorm "github.com/idasilva/gorm-oracle"
+	_ "github.com/idasilva/gorm-oracle/callbacks"
 	"reflect"
 	"strconv"
 	"strings"
 )
-
-
 
 var dialectsMap = map[string]gorm.Dialect{}
 

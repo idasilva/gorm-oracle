@@ -14,6 +14,7 @@ import (
 	"testing"
 	"time"
 
+	_ "github.com/idasilva/gorm-oracle/callbacks"
 	_ "github.com/idasilva/gorm-oracle/dialects/mysql"
 	"github.com/idasilva/gorm-oracle/dialects/postgres"
 	_ "github.com/idasilva/gorm-oracle/dialects/sqlite"
@@ -769,7 +770,7 @@ func TestDdlErrors(t *testing.T) {
 func TestOpenWithOneParameter(t *testing.T) {
 	var dbSQL gorm.SQLCommon
 
-	db, err := gorm.Open(context.Background(), dialects.NewDialect( "oracle"), dbSQL)
+	db, err := gorm.Open(context.Background(), dialects.NewDialect("oracle"), dbSQL)
 	if db != nil {
 		t.Error("Open with one parameter returned non nil for db")
 	}
