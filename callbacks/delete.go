@@ -15,6 +15,7 @@ func init() {
 	gorm.DefaultCallback.Delete().Register("gorm:delete", deleteCallback)
 	gorm.DefaultCallback.Delete().Register("gorm:after_delete", afterDeleteCallback)
 	gorm.DefaultCallback.Delete().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
+	fmt.Println("deleted")
 }
 
 // beforeDeleteCallback will invoke `BeforeDelete` method before deleting

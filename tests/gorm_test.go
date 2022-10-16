@@ -15,7 +15,6 @@ import (
 "time"
 
 	"github.com/idasilva/gorm-oracle/dialects/oracle"
-		_ "github.com/idasilva/gorm-oracle/dialects/mssql"
 	_ "github.com/idasilva/gorm-oracle/dialects/mysql"
 	"github.com/idasilva/gorm-oracle/dialects/postgres"
 	_ "github.com/idasilva/gorm-oracle/dialects/sqlite"

@@ -19,6 +19,7 @@ func init() {
 	gorm.DefaultCallback.Create().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
 	gorm.DefaultCallback.Create().Register("gorm:after_create", afterCreateCallback)
 	gorm.DefaultCallback.Create().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
+	fmt.Println("created")
 }
 
 // beforeCreateCallback will invoke `BeforeSave`, `BeforeCreate` method before creating

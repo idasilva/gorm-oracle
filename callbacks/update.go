@@ -20,6 +20,7 @@ func init() {
 	gorm.DefaultCallback.Update().Register("gorm:save_after_associations", saveAfterAssociationsCallback)
 	gorm.DefaultCallback.Update().Register("gorm:after_update", afterUpdateCallback)
 	gorm.DefaultCallback.Update().Register("gorm:commit_or_rollback_transaction", commitOrRollbackTransactionCallback)
+	fmt.Println("update")
 }
 
 // assignUpdatingAttributesCallback assign updating attributes to model

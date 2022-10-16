@@ -1,12 +1,14 @@
 package callbacks
 
 import (
+	"fmt"
 	gorm "github.com/idasilva/gorm-oracle"
 )
 
 // Define callbacks for row query
 func init() {
 	gorm.DefaultCallback.RowQuery().Register("gorm:row_query", rowQueryCallback)
+	fmt.Println("row query")
 }
 
 // queryCallback used to query data from database

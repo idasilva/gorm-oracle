@@ -1,8 +1,7 @@
 package tests_test
 
 import (
-	gorm "github.com/idasilva/gorm-oracle"
-"os"
+	"os"
 	"testing"
 	"time"
 )
@@ -32,13 +31,13 @@ func TestInlineDelete(t *testing.T) {
 
 	if DB.Delete(&User{}, user1.Id).Error != nil {
 		t.Errorf("No error should happen when delete a record")
-	} else if !gorm.DB.Where("name = ?", user1.Name).First(&User{}).RecordNotFound() {
+	} else if !DB.Where("name = ?", user1.Name).First(&User{}).RecordNotFound() {
 		t.Errorf("User can't be found after delete")
 	}
 
 	if err := DB.Delete(&User{}, "name = ?", user2.Name).Error; err != nil {
 		t.Errorf("No error should happen when delete a record, err=%s", err)
-	} else if !gorm.DB.Where("name = ?", user2.Name).First(&User{}).RecordNotFound() {
+	} else if !DB.Where("name = ?", user2.Name).First(&User{}).RecordNotFound() {
 		t.Errorf("User can't be found after delete")
 	}
 }

@@ -6,7 +6,8 @@ import (
 	"database/sql/driver"
 	"fmt"
 	gorm "github.com/idasilva/gorm-oracle"
-"os"
+	"github.com/idasilva/gorm-oracle/dialects/sqlite"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
@@ -33,7 +34,7 @@ func OpenTestConnection() (db *gorm.DB, err error) {
 	fmt.Println("testing sqlite3...")
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
-	db, err = gorm.Open(ctxTimeout, nil, filepath.Join(os.TempDir(), "gorm.db"))
+	db, err = gorm.Open(ctxTimeout, sqlite.NewDialect(), filepath.Join(os.TempDir(), "gorm.db"))
 
 	db.DB().SetMaxIdleConns(10)
 

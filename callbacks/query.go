@@ -15,6 +15,7 @@ func init() {
 	gorm.DefaultCallback.Query().Register("gorm:query", queryCallback)
 	gorm.DefaultCallback.Query().Register("gorm:preload", gorm.PreloadCallback)
 	gorm.DefaultCallback.Query().Register("gorm:after_query", afterQueryCallback)
+	fmt.Println("query")
 }
 
 // queryCallback used to query data from database
