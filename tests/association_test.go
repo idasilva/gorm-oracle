@@ -2,7 +2,7 @@ package tests_test
 
 import (
 	"fmt"
-	 "github.com/idasilva/gorm-oracle"
+	gorm  "github.com/idasilva/gorm-oracle"
 "os"
 	"reflect"
 	"sort"
@@ -14,8 +14,8 @@ func TestBelongsTo(t *testing.T) {
 	post := Post{
 		Title:        "post belongs to",
 		Body:         "body belongs to",
-		Category:    Category{Model: gorm_oracle.Model{ID: 1}, Name: "Category 1"},
-		MainCategory: Category{Model: gorm_oracle.Model{ID: 2}, Name: "Main Category 1"},
+		Category:    Category{Model: gorm.Model{ID: 1}, Name: "Category 1"},
+		MainCategory: Category{Model: gorm.Model{ID: 2}, Name: "Main Category 1"},
 	}
 
 	if err := DB.Save(&post).Error; err != nil {
@@ -59,7 +59,7 @@ func TestBelongsTo(t *testing.T) {
 
 	// Append
 	var category2 = Category{
-		Model: gorm_oracle.Model{ID: 3},
+		Model: gorm.Model{ID: 3},
 		Name:  "Category 2",
 	}
 	DB.Model(&post).Association("Category").Append(&category2)
@@ -81,7 +81,7 @@ func TestBelongsTo(t *testing.T) {
 
 	// Replace
 	var category3 = Category{
-		Model: gorm_oracle.Model{ID: 4},
+		Model: gorm.Model{ID: 4},
 		Name:  "Category 3",
 	}
 	DB.Model(&post).Association("Category").Replace(&category3)
@@ -128,7 +128,7 @@ func TestBelongsTo(t *testing.T) {
 
 	// Clear
 	DB.Model(&post).Association("Category").Append(&Category{
-		Model: gorm_oracle.Model{ID: 5},
+		Model: gorm.Model{ID: 5},
 		Name:  "Category 2",
 	})
 
@@ -156,7 +156,7 @@ func TestBelongsTo(t *testing.T) {
 
 	// Check Association mode with soft delete
 	category6 := Category{
-		Model: gorm_oracle.Model{ID: 7},
+		Model: gorm.Model{ID: 7},
 		Name:  "Category 6",
 	}
 	DB.Model(&post).Association("Category").Append(&category6)
@@ -186,12 +186,12 @@ func TestBelongsTo(t *testing.T) {
 
 func TestBelongsToOverrideForeignKey1(t *testing.T) {
 	type Profile struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name string
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Profile      Profile `gorm:"ForeignKey:ProfileRefer"`
 		ProfileRefer int
 	}
@@ -207,13 +207,13 @@ func TestBelongsToOverrideForeignKey1(t *testing.T) {
 
 func TestBelongsToOverrideForeignKey2(t *testing.T) {
 	type Profile struct {
-		gorm_oracle.Model
+		gorm.Model
 		Refer string
 		Name  string
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Profile   Profile `gorm:"ForeignKey:ProfileID;AssociationForeignKey:Refer"`
 		ProfileID int
 	}
@@ -375,13 +375,13 @@ func TestHasOne(t *testing.T) {
 
 func TestHasOneOverrideForeignKey1(t *testing.T) {
 	type Profile struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name      string
 		UserRefer uint
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Profile Profile `gorm:"ForeignKey:UserRefer"`
 	}
 
@@ -396,13 +396,13 @@ func TestHasOneOverrideForeignKey1(t *testing.T) {
 
 func TestHasOneOverrideForeignKey2(t *testing.T) {
 	type Profile struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name   string
 		UserID uint
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Refer   string
 		Profile Profile `gorm:"ForeignKey:UserID;AssociationForeignKey:Refer"`
 	}
@@ -420,7 +420,7 @@ func TestHasMany(t *testing.T) {
 	post := Post{
 		Title:    "post has many",
 		Body:     "body has many",
-		Comments: []*Comment{{Model: gorm_oracle.Model{ID: 1}, Content: "Comment 1"}, {Model: gorm_oracle.Model{ID: 2}, Content: "Comment 2"}},
+		Comments: []*Comment{{Model: gorm.Model{ID: 1}, Content: "Comment 1"}, {Model: gorm.Model{ID: 2}, Content: "Comment 2"}},
 	}
 
 	if err := DB.Save(&post).Error; err != nil {
@@ -465,7 +465,7 @@ func TestHasMany(t *testing.T) {
 	}
 
 	// Append
-	DB.Model(&post).Association("Comments").Append(&Comment{Model: gorm_oracle.Model{ID: 3}, Content: "Comment 3"})
+	DB.Model(&post).Association("Comments").Append(&Comment{Model: gorm.Model{ID: 3}, Content: "Comment 3"})
 
 	var comments2 []Comment
 	DB.Model(&post).Related(&comments2)
@@ -499,7 +499,7 @@ func TestHasMany(t *testing.T) {
 		t.Errorf("Replace for other resource should not clear all comments")
 	}
 
-	DB.Model(&post).Association("Comments").Replace(&Comment{Model: gorm_oracle.Model{ID: 4}, Content: "Comment 4"}, &Comment{Model: gorm_oracle.Model{ID: 5}, Content: "Comment 5"})
+	DB.Model(&post).Association("Comments").Replace(&Comment{Model: gorm.Model{ID: 4}, Content: "Comment 4"}, &Comment{Model: gorm.Model{ID: 5}, Content: "Comment 5"})
 
 	var comments41 []Comment
 	DB.Model(&post).Related(&comments41)
@@ -526,7 +526,7 @@ func TestHasMany(t *testing.T) {
 
 	// Check Association mode with soft delete
 	var comment6 = Comment{
-		Model:   gorm_oracle.Model{ID: 6},
+		Model:   gorm.Model{ID: 6},
 		Content: "comment 6",
 	}
 	DB.Model(&post).Association("Comments").Append(&comment6)
@@ -558,13 +558,13 @@ func TestHasMany(t *testing.T) {
 
 func TestHasManyOverrideForeignKey1(t *testing.T) {
 	type Profile struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name      string
 		UserRefer uint
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Profile []Profile `gorm:"ForeignKey:UserRefer"`
 	}
 
@@ -579,13 +579,13 @@ func TestHasManyOverrideForeignKey1(t *testing.T) {
 
 func TestHasManyOverrideForeignKey2(t *testing.T) {
 	type Profile struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name   string
 		UserID uint
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Refer   string
 		Profile []Profile `gorm:"ForeignKey:UserID;AssociationForeignKey:Refer"`
 	}
@@ -897,19 +897,19 @@ func TestSkipSaveAssociation(t *testing.T) {
 	}
 
 	type Company struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name string
 	}
 
 	type User struct {
-		gorm_oracle.Model
+		gorm.Model
 		Name      string
 		CompanyID uint
 		Company   Company `gorm:"save_associations:false"`
 	}
 	DB.AutoMigrate(&Company{}, &User{})
 
-	DB.Save(&User{Model: gorm_oracle.Model{ID: 1}, Name: "jinzhu", Company: Company{Model: gorm_oracle.Model{ID: 50}, Name: "skip_save_association"}})
+	DB.Save(&User{Model: gorm.Model{ID: 1}, Name: "jinzhu", Company: Company{Model: gorm.Model{ID: 50}, Name: "skip_save_association"}})
 
 	if !DB.Where("name = ?", "skip_save_association").First(&Company{}).RecordNotFound() {
 		t.Errorf("Company skip_save_association should not been saved")

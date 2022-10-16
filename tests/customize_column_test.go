@@ -1,11 +1,11 @@
 package tests_test
 
 import (
+	"github.com/idasilva/gorm-oracle"
 	"os"
 	"testing"
 	"time"
 
-	"github.com/leocomelli/gorm"
 )
 
 type CustomizeColumn struct {

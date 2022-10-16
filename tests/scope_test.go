@@ -1,20 +1,20 @@
 package tests_test
 
 import (
-	 "github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "testing"
 )
 
-func NameIn1And2(d *gorm_oracle.DB) *gorm_oracle.DB {
+func NameIn1And2(d *gorm.DB) *gorm.DB {
 	return d.Where("name in (?)", []string{"ScopeUser1", "ScopeUser2"})
 }
 
-func NameIn2And3(d *gorm_oracle.DB) *gorm_oracle.DB {
+func NameIn2And3(d *gorm.DB) *gorm.DB {
 	return d.Where("name in (?)", []string{"ScopeUser2", "ScopeUser3"})
 }
 
-func NameIn(names []string) func(d *gorm_oracle.DB) *gorm_oracle.DB {
-	return func(d *gorm_oracle.DB) *gorm_oracle.DB {
+func NameIn(names []string) func(d *gorm.DB) *gorm.DB {
+	return func(d *gorm.DB) *gorm.DB {
 		return d.Where("name in (?)", names)
 	}
 }

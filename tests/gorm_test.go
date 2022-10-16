@@ -6,18 +6,19 @@ import (
 "database/sql"
 "database/sql/driver"
 "fmt"
-"github.com/idasilva/gorm-oracle"
-"github.com/idasilva/gorm-oracle/dialects/oracle"
-"os"
+	"github.com/erikstmartin/go-testdb"
+	"github.com/idasilva/gorm-oracle"
+	"os"
 "reflect"
 "strconv"
 "testing"
 "time"
 
-		_ "github.com/leocomelli/gorm/dialects/mssql"
-	_ "github.com/leocomelli/gorm/dialects/mysql"
-	"github.com/leocomelli/gorm/dialects/postgres"
-	_ "github.com/leocomelli/gorm/dialects/sqlite"
+	"github.com/idasilva/gorm-oracle/dialects/oracle"
+		_ "github.com/idasilva/gorm-oracle/dialects/mssql"
+	_ "github.com/idasilva/gorm-oracle/dialects/mysql"
+	"github.com/idasilva/gorm-oracle/dialects/postgres"
+	_ "github.com/idasilva/gorm-oracle/dialects/sqlite"
 )
 
 func TestStringPrimaryKey(t *testing.T) {
@@ -457,7 +458,7 @@ func TestRaw(t *testing.T) {
 	}
 
 	DB.Exec("update users set name=? where name in (?)", "jinzhu", []string{user1.Name, user2.Name, user3.Name})
-	if DB.Where("name in (?)", []string{user1.Name, user2.Name, user3.Name}).First(&User{}).Error != gorm_oracle.ErrRecordNotFound {
+	if DB.Where("name in (?)", []string{user1.Name, user2.Name, user3.Name}).First(&User{}).Error != gorm.ErrRecordNotFound {
 		t.Error("Raw sql to update records")
 	}
 }
@@ -716,7 +717,7 @@ func TestSetAndGet(t *testing.T) {
 }
 
 func TestCompatibilityMode(t *testing.T) {
-	DB, _ := gorm_oracle.Open(context.Background(), oracle.NewDialect(context.Background(), "testdb", DB.DB()), DB.DB())
+	DB, _ := gorm.Open(context.Background(), oracle.NewDialect("testdb"), DB.DB())
 
 	testdb.SetQueryFunc(func(query string) (driver.Rows, error) {
 		columns := []string{"id", "name", "age"}
@@ -738,13 +739,13 @@ func TestCompatibilityMode(t *testing.T) {
 func TestOpenExistingDB(t *testing.T) {
 	DB.Save(&User{Name: "jnfeinstein"})
 	dialect := os.Getenv("GORM_DIALECT")
-	db, err := gorm_oracle.Open(context.Background(), oracle.NewDialect(context.Background(), dialect, DB.DB()), DB.DB())
+	db, err := gorm.Open(context.Background(), oracle.NewDialect(dialect), DB.DB())
 	if err != nil {
 		t.Errorf("Should have wrapped the existing DB connection")
 	}
 
 	var user User
-	if db.Where("name = ?", "jnfeinstein").First(&user).Error == gorm_oracle.ErrRecordNotFound {
+	if db.Where("name = ?", "jnfeinstein").First(&user).Error == gorm.ErrRecordNotFound {
 		t.Errorf("Should have found existing record")
 	}
 }
@@ -768,9 +769,9 @@ func TestDdlErrors(t *testing.T) {
 }
 
 func TestOpenWithOneParameter(t *testing.T) {
-	var dbSQL gorm_oracle.SQLCommon
+	var dbSQL gorm.SQLCommon
 
-	db, err := gorm_oracle.Open(context.Background(), oracle.NewDialect(context.Background(), "oracle", dbSQL), dbSQL)
+	db, err := gorm.Open(context.Background(), oracle.NewDialect( "oracle"), dbSQL)
 	if db != nil {
 		t.Error("Open with one parameter returned non nil for db")
 	}

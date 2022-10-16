@@ -4,7 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	"github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "os"
 	"testing"
 )
@@ -127,14 +127,14 @@ type ScannerDataTypeTestStruct2 struct {
 }
 
 func TestScannerDataType(t *testing.T) {
-	scope := gorm_oracle.Scope{Value: &ScannerDataTypeTestStruct{}}
+	scope := gorm.Scope{Value: &ScannerDataTypeTestStruct{}}
 	if field, ok := scope.FieldByName("ScannerDataType"); ok {
 		if DB.Dialect().DataTypeOf(field.StructField) != "json" {
 			t.Errorf("data type for scanner is wrong")
 		}
 	}
 
-	scope = gorm_oracle.Scope{Value: &ScannerDataTypeTestStruct2{}}
+	scope = gorm.Scope{Value: &ScannerDataTypeTestStruct2{}}
 	if field, ok := scope.FieldByName("ScannerDataType"); ok {
 		if DB.Dialect().DataTypeOf(field.StructField) != "varchar(24)" {
 			t.Errorf("data type for scanner is wrong")

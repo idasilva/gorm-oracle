@@ -3,7 +3,7 @@ package tests_test
 import (
 
 "fmt"
-"github.com/idasilva/gorm-oracle"
+gorm "github.com/idasilva/gorm-oracle"
 "github.com/idasilva/gorm-oracle/utils"
 "os"
 "strconv"
@@ -20,14 +20,14 @@ type Person struct {
 }
 
 type PersonAddress struct {
-	gorm_oracle.JoinTableHandler
+	gorm.JoinTableHandler
 	PersonID  int
 	AddressID int
 	DeletedAt *time.Time
 	CreatedAt time.Time
 }
 
-func (*PersonAddress) Add(handler gorm_oracle.JoinTableHandlerInterface, db *gorm_oracle.DB, foreignValue interface{}, associationValue interface{}) error {
+func (*PersonAddress) Add(handler gorm.JoinTableHandlerInterface, db *gorm.DB, foreignValue interface{}, associationValue interface{}) error {
 	foreignPrimaryKey, _ := strconv.Atoi(fmt.Sprint(db.NewScope(foreignValue).PrimaryKeyValue()))
 	associationPrimaryKey, _ := strconv.Atoi(fmt.Sprint(db.NewScope(associationValue).PrimaryKeyValue()))
 	if result := db.Unscoped().Model(&PersonAddress{}).Where(map[string]interface{}{
@@ -47,11 +47,11 @@ func (*PersonAddress) Add(handler gorm_oracle.JoinTableHandlerInterface, db *gor
 	return nil
 }
 
-func (*PersonAddress) Delete(handler gorm_oracle.JoinTableHandlerInterface, db *gorm_oracle.DB, sources ...interface{}) error {
+func (*PersonAddress) Delete(handler gorm.JoinTableHandlerInterface, db *gorm.DB, sources ...interface{}) error {
 	return db.Delete(&PersonAddress{}).Error
 }
 
-func (pa *PersonAddress) JoinWith(handler gorm_oracle.JoinTableHandlerInterface, db *gorm_oracle.DB, source interface{}) *gorm_oracle.DB {
+func (pa *PersonAddress) JoinWith(handler gorm.JoinTableHandlerInterface, db *gorm.DB, source interface{}) *gorm.DB {
 	table := pa.Table(db)
 	return db.Joins("INNER JOIN person_addresses ON person_addresses.address_id = addresses.id").Where(fmt.Sprintf("%v.deleted_at IS NULL OR %v.deleted_at <= '0001-01-02'", table, table))
 }

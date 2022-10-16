@@ -20,7 +20,7 @@ Please provide a complete runnable program to reproduce your issue.
 package main
 
 import (
-	"github.com/leocomelli/gorm"
+	"github.com/idasilva/gorm-oracle"
 	_ "github.com/leocomelli/gorm/dialects/mssql"
 	_ "github.com/leocomelli/gorm/dialects/mysql"
 	_ "github.com/leocomelli/gorm/dialects/postgres"

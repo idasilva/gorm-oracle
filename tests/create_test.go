@@ -1,7 +1,7 @@
 package tests_test
 
 import (
-	"github.com/idasilva/gorm-oracle"
+	gorm	"github.com/idasilva/gorm-oracle"
 "os"
 	//"reflect"
 	"testing"
@@ -80,7 +80,7 @@ func TestCreateWithExistingTimestamp(t *testing.T) {
 	}
 
 	var newUser User
-	gorm_oracle.DB.First(&newUser, user.Id)
+	gorm.DB.First(&newUser, user.Id)
 
 	if newUser.CreatedAt.UTC().Format(time.RFC3339) != timeA.UTC().Format(time.RFC3339) {
 		t.Errorf("CreatedAt should not be changed")
@@ -101,7 +101,7 @@ func TestCreateWithAutoIncrement(t *testing.T) {
 		t.Skip("Skipping this because only postgres properly support auto_increment on a non-primary_key column")
 	}
 
-	gorm_oracle.DB.AutoMigrate(&AutoIncrementUser{})
+	gorm.DB.AutoMigrate(&AutoIncrementUser{})
 
 	user1 := AutoIncrementUser{}
 	user2 := AutoIncrementUser{}

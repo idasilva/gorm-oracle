@@ -1,14 +1,14 @@
 package tests
 
 import (
-	"github.com/idasilva/gorm-oracle"
+	gorm	"github.com/idasilva/gorm-oracle"
 "reflect"
 	"runtime"
 	"strings"
 	"testing"
 )
 
-func equalFuncs(funcs []*func(s *gorm_oracle.Scope), fnames []string) bool {
+func equalFuncs(funcs []*func(s *gorm.Scope), fnames []string) bool {
 	var names []string
 	for _, f := range funcs {
 		fnames := strings.Split(runtime.FuncForPC(reflect.ValueOf(*f).Pointer()).Name(), ".")
@@ -17,14 +17,14 @@ func equalFuncs(funcs []*func(s *gorm_oracle.Scope), fnames []string) bool {
 	return reflect.DeepEqual(names, fnames)
 }
 
-func create(s *gorm_oracle.Scope)        {}
-func beforeCreate1(s *gorm_oracle.Scope) {}
-func beforeCreate2(s *gorm_oracle.Scope) {}
-func afterCreate1(s *gorm_oracle.Scope)  {}
-func afterCreate2(s *gorm_oracle.Scope)  {}
+func create(s *gorm.Scope)        {}
+func beforeCreate1(s *gorm.Scope) {}
+func beforeCreate2(s *gorm.Scope) {}
+func afterCreate1(s *gorm.Scope)  {}
+func afterCreate2(s *gorm.Scope)  {}
 
 func TestRegisterCallback(t *testing.T) {
-	var callback = &gorm_oracle.Callback{}
+	var callback = &gorm.Callback{}
 
 	callback.Create().Register("before_create1", beforeCreate1)
 	callback.Create().Register("before_create2", beforeCreate2)
@@ -38,7 +38,7 @@ func TestRegisterCallback(t *testing.T) {
 }
 
 func TestRegisterCallbackWithOrder(t *testing.T) {
-	var callback1 = &gorm_oracle.Callback{}
+	var callback1 = &gorm.Callback{}
 	callback1.Create().Register("before_create1", beforeCreate1)
 	callback1.Create().Register("create", create)
 	callback1.Create().Register("after_create1", afterCreate1)
@@ -47,7 +47,7 @@ func TestRegisterCallbackWithOrder(t *testing.T) {
 		t.Errorf("register callback with order")
 	}
 
-	var callback2 = &gorm_oracle.Callback{}
+	var callback2 = &gorm.Callback{}
 
 	callback2.Update().Register("create", create)
 	callback2.Update().Before("create").Register("before_create1", beforeCreate1)
@@ -61,7 +61,7 @@ func TestRegisterCallbackWithOrder(t *testing.T) {
 }
 
 func TestRegisterCallbackWithComplexOrder(t *testing.T) {
-	var callback1 = &gorm_oracle.Callback{}
+	var callback1 = &gorm.Callback{}
 
 	callback1.Query().Before("after_create1").After("before_create1").Register("create", create)
 	callback1.Query().Register("before_create1", beforeCreate1)
@@ -71,7 +71,7 @@ func TestRegisterCallbackWithComplexOrder(t *testing.T) {
 		t.Errorf("register callback with order")
 	}
 
-	var callback2 = &gorm_oracle.Callback{}
+	var callback2 = &gorm.Callback{}
 
 	callback2.Delete().Before("after_create1").After("before_create1").Register("create", create)
 	callback2.Delete().Before("create").Register("before_create1", beforeCreate1)
@@ -84,10 +84,10 @@ func TestRegisterCallbackWithComplexOrder(t *testing.T) {
 	}
 }
 
-func replaceCreate(s *gorm_oracle.Scope) {}
+func replaceCreate(s *gorm.Scope) {}
 
 func TestReplaceCallback(t *testing.T) {
-	var callback = &gorm_oracle.Callback{}
+	var callback = &gorm.Callback{}
 
 	callback.Create().Before("after_create1").After("before_create1").Register("create", create)
 	callback.Create().Register("before_create1", beforeCreate1)
@@ -100,7 +100,7 @@ func TestReplaceCallback(t *testing.T) {
 }
 
 func TestRemoveCallback(t *testing.T) {
-	var callback = &gorm_oracle.Callback{}
+	var callback = &gorm.Callback{}
 
 	callback.Create().Before("after_create1").After("before_create1").Register("create", create)
 	callback.Create().Register("before_create1", beforeCreate1)

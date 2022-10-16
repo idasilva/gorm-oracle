@@ -1,7 +1,7 @@
 package callbacks
 
 import (
-	 "github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 )
 
 // Define callbacks for row query

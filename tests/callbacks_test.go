@@ -2,7 +2,8 @@ package tests_test
 
 import (
 	"errors"
-	"github.com/leocomelli/gorm"
+	"github.com/idasilva/gorm-oracle"
+
 	"reflect"
 	"testing"
 )

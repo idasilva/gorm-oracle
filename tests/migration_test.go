@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
-	"github.com/idasilva/gorm-oracle"
+	gorm "github.com/idasilva/gorm-oracle"
 "os"
 	"path/filepath"
 	"testing"
@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	DB                 *gorm_oracle.DB
+	DB                 *gorm.DB
 )
 
 func init() {
@@ -29,11 +29,11 @@ func init() {
 }
 
 
-func OpenTestConnection() (db *gorm_oracle.DB, err error) {
+func OpenTestConnection() (db *gorm.DB, err error) {
 	fmt.Println("testing sqlite3...")
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
-	db, err = gorm_oracle.Open(ctxTimeout, "sqlite3", filepath.Join(os.TempDir(), "gorm.db"))
+	db, err = gorm.Open(ctxTimeout, nil, filepath.Join(os.TempDir(), "gorm.db"))
 
 	db.DB().SetMaxIdleConns(10)
 
@@ -205,7 +205,7 @@ type Post struct {
 }
 
 type Category struct {
-	gorm_oracle.Model
+	gorm.Model
 	Name string
 
 	Categories []Category
@@ -213,7 +213,7 @@ type Category struct {
 }
 
 type Comment struct {
-	gorm_oracle.Model
+	gorm.Model
 	PostId  int64
 	Content string
 	Post    Post

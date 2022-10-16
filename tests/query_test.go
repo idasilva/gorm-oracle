@@ -2,10 +2,10 @@ package tests_test
 
 import (
 	"fmt"
+	"github.com/idasilva/gorm-oracle/utils"
 	"github.com/jinzhu/now"
 	"reflect"
 
-	"github.com/leocomelli/gorm"
 
 	"os"
 	"testing"
@@ -675,7 +675,7 @@ func TestSelectWithVariables(t *testing.T) {
 
 	DB.Save(&User{Name: "jinzhu"})
 
-	rows, _ := DB.Table("users").Select("? as fake", gorm.Expr("name")).Rows()
+	rows, _ := DB.Table("users").Select("? as fake", utils.Expr("name")).Rows()
 
 	if !rows.Next() {
 		t.Errorf("Should have returned at least one row")
